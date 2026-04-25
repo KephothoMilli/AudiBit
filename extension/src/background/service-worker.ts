@@ -476,20 +476,21 @@ async function handleWandCommand(data: any, tabId?: number) {
     }
 
     // Call Wand Agent API
-    const response = await fetch(
-      "http://127.0.0.1:5001/w3bn3xt/us-central1/wandAgent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Wallet-Address": walletAddress,
-        },
-        body: JSON.stringify({
-          ...data,
-          screenshot,
-        }),
+    const FUNCTIONS_BASE_URL =
+      import.meta.env.VITE_FUNCTIONS_BASE_URL ||
+      "http://127.0.0.1:5001/w3bn3xt/us-central1";
+
+    const response = await fetch(`${FUNCTIONS_BASE_URL}/wandAgent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Wallet-Address": walletAddress,
       },
-    );
+      body: JSON.stringify({
+        ...data,
+        screenshot,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error(`Wand API error: ${response.statusText}`);

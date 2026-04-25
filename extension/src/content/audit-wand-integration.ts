@@ -335,8 +335,12 @@ class AuditWandIntegration {
    * Call audit agent API
    */
   private async callAuditAgent(params: any): Promise<AuditWandResponse> {
+    const base =
+      (import.meta as any).env?.VITE_FUNCTIONS_BASE_URL ||
+      "http://127.0.0.1:5001/w3bn3xt/us-central1";
+
     const response = await fetch(
-      `http://127.0.0.1:5001/w3bn3xt/us-central1/audit${params.agentType.toUpperCase()}Wand`,
+      `${base}/audit${params.agentType.toUpperCase()}Wand`,
       {
         method: "POST",
         headers: {
