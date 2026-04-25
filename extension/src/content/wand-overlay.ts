@@ -4,6 +4,21 @@
  * Provides visual feedback for voice commands and cursor tracking
  */
 
+/**
+ * Safe wrapper for chrome.runtime.sendMessage.
+ * Silently swallows "Extension context invalidated" errors that occur
+ * when the extension is reloaded while the content script is still running.
+ */
+function safeSendMessage(message: object): void {
+  try {
+    if (chrome?.runtime?.id) {
+      chrome.runtime.sendMessage(message);
+    }
+  } catch {
+    // Extension context invalidated — content script is stale, ignore
+  }
+}
+
 interface WandState {
   isListening: boolean;
   isProcessing: boolean;
@@ -312,7 +327,7 @@ class WandOverlay {
     }
 
     // Send to background script for regular Wand processing
-    chrome.runtime.sendMessage({
+    safeSendMessage({
       type: "WAND_PROCESS_COMMAND",
       data: {
         voiceCommand: command,
@@ -395,7 +410,7 @@ class WandOverlay {
     }
 
     // Send to audit Wand integration
-    chrome.runtime.sendMessage({
+    safeSendMessage({
       type: "WAND_AUDIT_COMMAND",
       command: {
         type: commandType,

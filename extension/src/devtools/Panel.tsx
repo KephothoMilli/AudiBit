@@ -172,14 +172,14 @@ const Panel: React.FC = () => {
             </div>
 
             <div className="filters">
-              <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+              <select value={filterType} onChange={(e) => setFilterType(e.target.value)} title="Filter by Type">
                 <option value="all">All Types</option>
                 <option value="accessibility">Accessibility</option>
                 <option value="ux">UX</option>
                 <option value="responsive">Responsive</option>
                 <option value="security">Security</option>
               </select>
-              <select value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value)}>
+              <select value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value)} title="Filter by Severity">
                 <option value="all">All Severities</option>
                 <option value="critical">Critical</option>
                 <option value="high">High</option>

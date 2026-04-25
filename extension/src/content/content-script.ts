@@ -28,12 +28,16 @@ function performProactiveChecks() {
     // Show overlay with local issues
     injectOverlay(localIssues);
 
-    // Notify background script
-    chrome.runtime.sendMessage({
-      type: "LOCAL_ISSUES_FOUND",
-      issues: localIssues,
-      summary,
-    });
+    // Notify background script — guard against invalidated extension context
+    try {
+      chrome.runtime.sendMessage({
+        type: "LOCAL_ISSUES_FOUND",
+        issues: localIssues,
+        summary,
+      });
+    } catch {
+      // Extension was reloaded — content script context is stale, ignore
+    }
   }
 }
 
@@ -126,7 +130,13 @@ async function injectOverlay(issues: LocalIssue[]) {
 
     // Click to open DevTools panel
     root.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ type: "OPEN_DEVTOOLS" });
+      try {
+        if (chrome?.runtime?.id) {
+          chrome.runtime.sendMessage({ type: "OPEN_DEVTOOLS" });
+        }
+      } catch {
+        // Extension context invalidated
+      }
     });
   }
 
@@ -890,7 +900,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       const isNowActive = wandOverlay.toggle();
       sendResponse({ active: isNowActive });
     } else {
-      // Wand overlay not yet initialised — trigger keyboard shortcut simulation
       document.dispatchEvent(
         new KeyboardEvent("keydown", {
           key: " ",
@@ -901,6 +910,51 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       );
       sendResponse({ active: true });
     }
+    return true;
+  }
+
+  if (message.type === "GET_PAGE_META") {
+    // Collect page metadata for security agent
+    const headers: Record<string, string> = {};
+
+    // Extract meta tags as proxy for response headers
+    document.querySelectorAll("meta").forEach((meta) => {
+      const name =
+        meta.getAttribute("name") ||
+        meta.getAttribute("http-equiv") ||
+        meta.getAttribute("property");
+      const content = meta.getAttribute("content");
+      if (name && content) headers[name.toLowerCase()] = content;
+    });
+
+    // Detect loaded libraries from script tags and global objects
+    const libraries: string[] = [];
+    document.querySelectorAll("script[src]").forEach((script) => {
+      const src = (script as HTMLScriptElement).src;
+      if (src) {
+        const match = src.match(/\/([a-zA-Z0-9_-]+)(?:\.min)?\.js/);
+        if (match) libraries.push(match[1]);
+      }
+    });
+
+    const globals = [
+      "jQuery",
+      "React",
+      "Vue",
+      "Angular",
+      "Ember",
+      "Backbone",
+      "lodash",
+      "_",
+      "moment",
+      "axios",
+      "bootstrap",
+    ];
+    globals.forEach((g) => {
+      if ((window as any)[g]) libraries.push(g);
+    });
+
+    sendResponse({ headers, libraries: [...new Set(libraries)] });
     return true;
   }
 });

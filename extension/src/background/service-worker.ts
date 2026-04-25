@@ -45,12 +45,13 @@ chrome.runtime.onMessage.addListener(
         status: connectedWallet ? "CONNECTED" : "DISCONNECTED",
         walletAddress: connectedWallet || undefined,
       });
+      return false; // Sync response — no need to keep channel open
     }
 
     if (message.type === "GET_CREDITS_REQUEST") {
       if (!connectedWallet) {
         sendResponse({ type: "GET_CREDITS_RESPONSE", credits: 0 });
-        return true;
+        return false;
       }
 
       chrome.storage.local.get([`credits_${connectedWallet}`], (result) => {
@@ -63,11 +64,15 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (message.type === "TRIGGER_AUDIT") {
-      handleAudit(message);
-      return true;
+      // Fire-and-forget — do NOT return true or call sendResponse
+      // The popup listens for AGENT_STATUS / AUDIT_COMPLETE broadcasts instead
+      handleAudit(message).catch((err) =>
+        console.error("handleAudit unhandled error:", err),
+      );
+      return false;
     }
 
-    return true;
+    return false;
   },
 );
 
@@ -254,6 +259,21 @@ async function handleAudit(
       throw new Error("Failed to get DOM from page");
     }
 
+    // Collect page headers and libraries for security agent
+    let pageHeaders: Record<string, string> = {};
+    let pageLibraries: string[] = [];
+    if (message.auditType === "security") {
+      try {
+        const meta = await chrome.tabs.sendMessage(tab.id, {
+          type: "GET_PAGE_META",
+        });
+        pageHeaders = meta?.headers || {};
+        pageLibraries = meta?.libraries || [];
+      } catch {
+        // Non-fatal — security agent will work with what it has
+      }
+    }
+
     console.log("DOM retrieved, calling Coordinator API...");
     sendStatus(
       "bridging",
@@ -267,6 +287,8 @@ async function handleAudit(
       dom: response.dom,
       auditType: message.auditType,
       walletAddress,
+      headers: pageHeaders,
+      libraries: pageLibraries,
     });
 
     console.log("Audit complete:", auditResult);
@@ -410,6 +432,8 @@ async function callAuditAPI(params: {
   dom: string;
   auditType: "ui" | "ux" | "dom" | "security";
   walletAddress: string;
+  headers?: Record<string, string>;
+  libraries?: string[];
 }): Promise<AuditResponse> {
   const FUNCTIONS_BASE_URL =
     import.meta.env.VITE_FUNCTIONS_BASE_URL ||
@@ -424,7 +448,9 @@ async function callAuditAPI(params: {
     body: JSON.stringify({
       url: params.url,
       dom: params.dom,
-      agents: [params.auditType], // Run the specific agent requested
+      headers: params.headers || {},
+      libs: params.libraries || [],
+      agents: [params.auditType],
     }),
   });
 

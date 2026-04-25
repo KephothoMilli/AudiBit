@@ -16,6 +16,8 @@ export class DOMMonitor {
   }
 
   public start() {
+    if (!chrome.runtime?.id) return; // Guard against invalidated context
+
     this.observer = new MutationObserver(() => this.handleMutations());
     this.observer.observe(document.body, {
       childList: true,
@@ -32,6 +34,11 @@ export class DOMMonitor {
   }
 
   private handleMutations() {
+    if (!chrome.runtime?.id) {
+      this.stop(); // Self-terminate if context is gone
+      return;
+    }
+
     if (this.debounceTimer) window.clearTimeout(this.debounceTimer);
     this.debounceTimer = window.setTimeout(() => {
       this.runHeuristics();
