@@ -1,0 +1,29 @@
+Circle Product Feedback Submission
+
+Products Used: Which Circle products did your team use?
+We ended up hooking up a few different things:
+- Arc L1 Testnet
+- USDC (obviously, as the main token)
+- Circle Programmable Wallets (the Developer-Controlled ones)
+- Circle CCTP / Bridge Kit
+- Nanopayments setup for the micro-transactions
+
+Use Case: Why did you choose these products for your project?
+We built AudiBit to completely get rid of those annoying $50/mo SaaS subscriptions that developer tools usually charge. We wanted a true pay-as-you-go model where hitting an AI endpoint costs exactly what it costs—around $0.003 in USDC per query. 
+
+We went with Arc L1 because we needed super fast finality and gas that didn't eat into the micro-transactions. But the biggest reason we used Circle was the Developer-Controlled Wallets. If we forced standard web devs to download a crypto wallet just to use our Chrome extension, they'd bounce immediately. By spinning up wallets in the background and using CCTP to bridge any existing USDC they might have on Ethereum or Solana, we basically made the whole blockchain part invisible. They just click "run audit" and it works.
+
+Successes: What worked well during development?
+1. Wallet Abstraction: The Programmable Wallets API was honestly great. Being able to programmatically spin up and fund wallets behind the scenes meant we could keep users entirely inside our Chrome extension popup without any weird redirects.
+2. Arc's Speed: The speed on Arc Testnet is wild. A user clicks "Pay", the API calls fire, the transaction confirms, and the AI agent starts working in just a couple of seconds. You can actually build real-time apps with this.
+3. Docs: The API references and the Postman collections you guys provide saved us a ton of time getting the initial auth and transaction flows working.
+
+Challenges: What issues or limitations did you encounter?
+1. The Bridge Waiting Game: CCTP is cool tech, but from a UX perspective, waiting 10–30 seconds for a transfer from Ethereum to finalize on Arc really breaks the flow. We had to build a bunch of loading spinners just to handle this delay so users wouldn't think the app crashed.
+2. Faucet Limits: This was a huge pain point for us. The strict limits on the testnet faucet (1 request per 24 hours per IP) really throttled our local dev and CI/CD pipelines. When you're trying to stress-test parallel AI agents making dozens of micro-transactions, you burn through testnet USDC fast, and getting blocked by the faucet was frustrating.
+3. Vague Errors: Sometimes when a transaction failed via the API, the error response was super generic. Differentiating between a gas estimation failure and a slight balance issue took way more trial and error than it should have.
+
+Recommendations: How could the product or developer experience be improved, made more seamless, or more scalable?
+1. Fast-Finality CCTP: For consumer apps, we really need a way to bypass block confirmation waiting times. It would be amazing if Circle introduced some sort of "Express CCTP" backed by liquidity pools that advances the funds instantly for a tiny fee. That would let us build truly synchronous cross-chain UX.
+2. Developer-Specific Faucets: Please give us an authenticated API endpoint to mint testnet USDC! Having a dedicated, higher-limit faucet for registered developers would make automated end-to-end testing so much easier.
+3. Webhook Debugging UI: It would save a lot of backend debugging time if the Circle Console had a Stripe-style dashboard specifically for webhooks, where we could see the exact payloads that failed and manually click a button to re-fire them.

@@ -21,17 +21,17 @@
         }
 
         :root {
-            --blue: #3b82f6;
-            --purple: #8b5cf6;
-            --blue-dark: #1d4ed8;
-            --purple-dark: #6d28d9;
-            --bg: #0a0a0f;
-            --bg2: #0f0f1a;
-            --bg3: #13131f;
-            --card: #16162a;
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #f1f5f9;
-            --muted: #94a3b8;
+            --blue: #2563eb;
+            --purple: #7c3aed;
+            --blue-dark: #1e40af;
+            --purple-dark: #5b21b6;
+            --bg: #ffffff;
+            --bg2: #f8fafc;
+            --bg3: #f1f5f9;
+            --card: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --text: #0f172a;
+            --muted: #475569;
             --radius: 16px;
         }
 
@@ -42,7 +42,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
-            color: var(--text);
+            color: #0f172a;
             line-height: 1.6;
             min-height: 100vh;
         }
@@ -58,8 +58,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 40px;
-            background: rgba(10, 10, 15, 0.85);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
         }
 
@@ -116,14 +117,14 @@
 
         .btn-ghost {
             background: transparent;
-            color: var(--muted);
+            color: #475569;
             border: 1px solid var(--border);
         }
 
         .btn-ghost:hover {
-            color: var(--text);
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.04);
+            color: #0f172a;
+            border-color: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 0, 0, 0.03);
         }
 
         /* ── HERO ── */
@@ -175,7 +176,7 @@
             font-size: clamp(2rem, 5vw, 3.6rem);
             font-weight: 800;
             line-height: 1.15;
-            background: linear-gradient(135deg, #fff 30%, var(--blue) 60%, var(--purple) 100%);
+            background: linear-gradient(135deg, #0f172a 30%, var(--blue) 80%, var(--purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -185,7 +186,7 @@
 
         .hero-sub {
             font-size: clamp(1rem, 2vw, 1.2rem);
-            color: var(--muted);
+            color: #475569;
             max-width: 620px;
             margin-bottom: 44px;
         }
@@ -230,7 +231,7 @@
         }
 
         .section-sub {
-            color: var(--muted);
+            color: #475569;
             font-size: 1.05rem;
             max-width: 560px;
         }
@@ -248,7 +249,7 @@
         }
 
         .agent-card {
-            background: var(--card);
+            background: #ffffff;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 28px 24px;
@@ -267,8 +268,8 @@
 
         .agent-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.14);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-color: rgba(0, 0, 0, 0.08);
         }
 
         .agent-icon {
@@ -283,7 +284,7 @@
         }
 
         .agent-desc {
-            color: var(--muted);
+            color: #475569;
             font-size: 0.9rem;
             line-height: 1.55;
             margin-bottom: 18px;
@@ -313,7 +314,7 @@
         .step {
             flex: 1;
             min-width: 220px;
-            background: var(--card);
+            background: #ffffff;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 28px 24px;
@@ -340,7 +341,7 @@
         }
 
         .step-desc {
-            color: var(--muted);
+            color: #475569;
             font-size: 0.9rem;
         }
 
@@ -372,7 +373,7 @@
         .wand-visual {
             flex: 1;
             min-width: 280px;
-            background: var(--card);
+            background: #ffffff;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 32px;
@@ -393,12 +394,12 @@
             gap: 6px;
             padding: 8px 16px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             font-family: monospace;
             font-size: 1rem;
             font-weight: 700;
-            color: var(--text);
+            color: #0f172a;
             margin: 16px 0;
         }
 
@@ -412,7 +413,7 @@
             align-items: flex-start;
             gap: 10px;
             padding: 8px 0;
-            color: var(--muted);
+            color: #475569;
             font-size: 0.9rem;
             border-bottom: 1px solid var(--border);
         }
@@ -449,7 +450,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--muted);
+            color: #475569;
             font-size: 0.85rem;
             font-weight: 600;
         }
@@ -492,7 +493,7 @@
         }
 
         .footer-tagline {
-            color: var(--muted);
+            color: #475569;
             font-size: 0.85rem;
             margin-bottom: 24px;
         }
@@ -506,14 +507,14 @@
         }
 
         .footer-links a {
-            color: var(--muted);
+            color: #475569;
             text-decoration: none;
             font-size: 0.85rem;
             transition: color 0.2s;
         }
 
         .footer-links a:hover {
-            color: var(--text);
+            color: #0f172a;
         }
 
         .footer-copy {
@@ -585,11 +586,17 @@
                 href="https://github.com/KephothoMilli/AudiBit/releases/latest/download/audibit-extension.zip">
                 ⬇ Download Extension
             </a>
+            <a class="btn btn-ghost btn-lg" href="https://youtu.be/EvjbEmCT-yE" target="_blank"
+                rel="noopener">
+                ▶ Watch Demo
+            </a>
             <a class="btn btn-ghost btn-lg" href="https://github.com/KephothoMilli/AudiBit" target="_blank"
                 rel="noopener">
                 ★ View on GitHub
             </a>
         </div>
+
+        <img src="../cover.png" alt="AudiBit Web3 Auditing" style="width: 100%; max-width: 960px; margin-top: 64px; border-radius: 20px; box-shadow: 0 32px 64px rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.08);" />
     </section>
 
     <!-- TECH STRIP -->
@@ -645,6 +652,66 @@
                     <span class="agent-price">0.08 USDC / query</span>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW TO USE DASHBOARD -->
+    <section class="how-to-agents" style="background: var(--bg3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <p class="section-label">Agent Dashboard</p>
+            <h2 class="section-title">How to run a Full Audit</h2>
+            <p class="section-sub">Using the AudiBit extension is seamless. Our agentic dashboard lives right in your browser tools.</p>
+            
+            <div style="display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap; align-items: center;">
+                <!-- Instructions -->
+                <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 24px;">
+                    <div style="display: flex; gap: 16px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(59,130,246,0.15); color: var(--blue); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">1</div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">Open the DevTools Panel</div>
+                            <div style="color: #475569; font-size: 0.95rem;">Right-click any page and select "Inspect", then navigate to the AudiBit tab. This is your command center.</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 16px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(139,92,246,0.15); color: var(--purple); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">2</div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">Dispatch an Agent</div>
+                            <div style="color: #475569; font-size: 0.95rem;">Click on the UI, UX, DOM, or Security agent from the dashboard. The extension will automatically verify your USDC balance and settle the nanopayment on Arc L1.</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 16px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(16,185,129,0.15); color: var(--green); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">3</div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">Review Findings</div>
+                            <div style="color: #475569; font-size: 0.95rem;">The agent will analyze the live page structure and return a categorized list of issues, along with actionable code snippets to fix them.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mock Dashboard UI -->
+                <div style="flex: 1; min-width: 320px; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 24px 48px rgba(0,0,0,0.08);">
+                    <div style="background: rgba(0,0,0,0.02); border-bottom: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-size: 0.8rem; font-weight: 600; color: #475569;">AudiBit DevTools</div>
+                        <div style="font-size: 0.8rem; background: rgba(16,185,129,0.15); color: #10b981; padding: 2px 8px; border-radius: 4px;">Balance: 14.50 USDC</div>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                            <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); padding: 16px; border-radius: 8px; text-align: center; cursor: pointer;">
+                                <div style="font-size: 1.5rem; margin-bottom: 4px;">🎨</div>
+                                <div style="font-size: 0.85rem; font-weight: 600; color: var(--blue);">Run UI Agent</div>
+                            </div>
+                            <div style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); padding: 16px; border-radius: 8px; text-align: center; cursor: pointer;">
+                                <div style="font-size: 1.5rem; margin-bottom: 4px;">🧠</div>
+                                <div style="font-size: 0.85rem; font-weight: 600; color: var(--purple);">Run UX Agent</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #475569; margin-bottom: 12px;">Recent Findings (UX)</div>
+                        <div style="background: rgba(239,68,68,0.05); border-left: 3px solid #ef4444; padding: 12px; border-radius: 0 4px 4px 0; font-size: 0.85rem;">
+                            <strong style="color: #fca5a5;">Critical:</strong> Primary CTA button fails WCAG contrast ratio (2.8:1).
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -712,7 +779,7 @@
                         style="font-size:0.85rem; color:var(--muted); margin-bottom:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
                         Wand Overlay</div>
                     <div
-                        style="background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:12px;">
+                        style="background:rgba(0, 0, 0, 0.03); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:12px;">
                         <div style="font-size:0.8rem; color:var(--muted); margin-bottom:6px;">You said:</div>
                         <div style="font-size:0.95rem; color:var(--text);">"Audit this checkout page for security
                             issues"</div>

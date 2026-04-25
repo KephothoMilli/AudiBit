@@ -81,19 +81,18 @@ Then load the extension from `extension/dist` as described above.
 
 ## 🎯 What's Working
 
-✅ Firebase Authentication with Google Sign-in  
-✅ Auth state persistence across sessions  
-✅ Service worker auth management  
-✅ Credit balance display  
-✅ Audit history tracking  
-✅ Payment history tracking
+✅ Circle Developer-Controlled Wallet generation
+✅ Cross-chain USDC bridging via CCTP
+✅ Sub-second nanopayment settlement on Arc L1 Testnet
+✅ Multi-agent architecture (UI, UX, DOM, Security)
+✅ Voice-first "Wand" assistant in the browser
+✅ DevTools Panel dashboard for full audit history
 
 ## 🚧 What's Next
 
-- [ ] Arc Network wallet connection
-- [ ] Credit purchase flow
-- [ ] Live audit triggering
-- [ ] DevTools panel integration
+- [ ] Mainnet deployment for Arc L1 and Circle endpoints
+- [ ] Support for additional external wallet providers (MetaMask, Phantom)
+- [ ] Custom rulesets for enterprise compliance
 
 ## 🆘 Need Help?
 

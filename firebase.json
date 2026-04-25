@@ -20,6 +20,7 @@
     ],
     "hosting": {
         "public": "landing",
+         "site": "audibit",
         "ignore": [
             "firebase.json",
             "**/.*",

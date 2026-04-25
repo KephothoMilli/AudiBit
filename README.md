@@ -1,5 +1,11 @@
 # AudiBit 🎯
 
+![AudiBit Cover](cover.png)
+
+[![Watch Demo](https://img.shields.io/badge/YouTube-Watch_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/EvjbEmCT-yE)
+[![Pitch Deck](https://img.shields.io/badge/Pitch_Deck-View_Slides-3b82f6?style=for-the-badge)](audibit-slides.html)
+[![Landing Page](https://img.shields.io/badge/Landing_Page-Visit_Site-10b981?style=for-the-badge)](landing/index.html)
+
 > **AI-powered web auditing, paid per query in USDC on Arc.**
 
 AudiBit is a Chrome extension that sends specialized AI agents to audit any website you're browsing — checking visual design, accessibility, DOM structure, and security vulnerabilities — and settles each query as a real USDC nanopayment on the Arc L1 blockchain. No subscriptions. No flat fees. You pay exactly for what you use, down to fractions of a cent.
