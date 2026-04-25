@@ -1285,19 +1285,47 @@ export const getPaymentLogs = functions.https.onRequest(async (req, res) => {
       return;
     }
 
-    const logs = await admin
-      .firestore()
-      .collection("payment_logs")
-      .where("walletAddress", "==", walletAddress)
-      .orderBy("createdAt", "desc")
-      .limit(20)
-      .get();
+    let result: any[] = [];
 
-    const result = logs.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toMillis() || Date.now(),
-    }));
+    try {
+      // Try the ordered query (requires composite index)
+      const logs = await admin
+        .firestore()
+        .collection("payment_logs")
+        .where("walletAddress", "==", walletAddress)
+        .orderBy("createdAt", "desc")
+        .limit(20)
+        .get();
+
+      result = logs.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toMillis() || Date.now(),
+      }));
+    } catch (indexError: any) {
+      // Index still building — fall back to unordered query and sort in memory
+      if (indexError.code === 9 || indexError.message?.includes("index")) {
+        functions.logger.warn(
+          "Index not ready, falling back to unordered query",
+        );
+        const logs = await admin
+          .firestore()
+          .collection("payment_logs")
+          .where("walletAddress", "==", walletAddress)
+          .limit(20)
+          .get();
+
+        result = logs.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt?.toMillis() || Date.now(),
+          }))
+          .sort((a, b) => b.createdAt - a.createdAt);
+      } else {
+        throw indexError;
+      }
+    }
 
     res.json({ logs: result });
   } catch (error: any) {
