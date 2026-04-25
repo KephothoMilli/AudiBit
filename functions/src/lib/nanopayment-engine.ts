@@ -24,8 +24,8 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import { FieldValue } from "firebase-admin/firestore";
 import { initiateDeveloperControlledWalletsClient } from "@circle-fin/developer-controlled-wallets";
-import { AppKit } from "@circle-fin/app-kit";
-import { createCircleWalletsAdapter } from "@circle-fin/adapter-circle-wallets";
+
+// AppKit and adapter are lazy-loaded inside bridgeUSDC to avoid slow startup
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -109,10 +109,16 @@ function getCircleClient() {
 }
 
 function getAppKit() {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { AppKit } = require("@circle-fin/app-kit");
   return new AppKit();
 }
 
 function getCircleWalletsAdapter() {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const {
+    createCircleWalletsAdapter,
+  } = require("@circle-fin/adapter-circle-wallets");
   const apiKey = process.env.CIRCLE_API_KEY!;
   const entitySecret = process.env.CIRCLE_ENTITY_SECRET!;
   return createCircleWalletsAdapter({ apiKey, entitySecret });

@@ -6,11 +6,15 @@
  */
 
 import * as functions from "firebase-functions";
-import { AppKit } from "@circle-fin/app-kit";
-import { createCircleWalletsAdapter } from "@circle-fin/adapter-circle-wallets";
 
-// Initialize App Kit
-const kit = new AppKit();
+// AppKit and adapter are lazy-loaded inside bridgeUSDC to avoid slow module startup
+
+// Initialize App Kit lazily
+function getKit() {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { AppKit } = require("@circle-fin/app-kit");
+  return new AppKit();
+}
 
 export interface BridgeRequest {
   fromChain: "Ethereum_Sepolia" | "Solana_Devnet";
@@ -49,6 +53,13 @@ export async function bridgeUSDC(
     functions.logger.info(
       `🌉 Starting bridge: ${request.amount} USDC from ${request.fromChain} to ${request.toChain}`,
     );
+
+    // Lazy-load heavy packages
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const {
+      createCircleWalletsAdapter,
+    } = require("@circle-fin/adapter-circle-wallets");
+    const kit = getKit();
 
     // Create Circle Wallets adapter
     const adapter = createCircleWalletsAdapter({
@@ -102,7 +113,10 @@ export async function bridgeUSDC(
 /**
  * Check if wallet has USDC on multiple chains and suggest bridging
  */
-export async function checkCrossChainBalance(walletAddress: string, getCircleClient: () => any): Promise<{
+export async function checkCrossChainBalance(
+  walletAddress: string,
+  getCircleClient: () => any,
+): Promise<{
   hasArcBalance: boolean;
   hasEthereumBalance: boolean;
   hasSolanaBalance: boolean;
@@ -118,51 +132,70 @@ export async function checkCrossChainBalance(walletAddress: string, getCircleCli
 }> {
   try {
     const client = getCircleClient();
-    
+
     // 1. List all wallets in the account to find relevant ones
     const walletsResponse = await client.listWallets({ pageSize: 50 });
     const allWallets = walletsResponse.data?.wallets || [];
-    
+
     // In a production app, we would associate wallets with users.
     // For this demo, we'll look for wallets that might belong to the same user.
     // Usually, users have the same address across EVM chains.
-    
-    const arcWallet = allWallets.find((w: any) => w.blockchain?.includes('ARC') && w.address?.toLowerCase() === walletAddress.toLowerCase());
-    const ethWallet = allWallets.find((w: any) => w.blockchain === 'ETH-SEPOLIA'); // Simplified: pick first available
-    const solWallet = allWallets.find((w: any) => w.blockchain === 'SOL-DEVNET');
-    
+
+    const arcWallet = allWallets.find(
+      (w: any) =>
+        w.blockchain?.includes("ARC") &&
+        w.address?.toLowerCase() === walletAddress.toLowerCase(),
+    );
+    const ethWallet = allWallets.find(
+      (w: any) => w.blockchain === "ETH-SEPOLIA",
+    ); // Simplified: pick first available
+    const solWallet = allWallets.find(
+      (w: any) => w.blockchain === "SOL-DEVNET",
+    );
+
     const balances = {
       arc: "0",
       eth: "0",
-      sol: "0"
+      sol: "0",
     };
-    
+
     // Helper to get balance
     const getBalance = async (walletId: string) => {
       const resp = await client.getWalletTokenBalance({ id: walletId });
-      const usdc = resp.data?.tokenBalances?.find((b: any) => 
-        b.token?.symbol === 'USDC' || b.token?.name?.toLowerCase().includes('usdc')
+      const usdc = resp.data?.tokenBalances?.find(
+        (b: any) =>
+          b.token?.symbol === "USDC" ||
+          b.token?.name?.toLowerCase().includes("usdc"),
       );
       return usdc?.amount || "0";
     };
-    
+
     if (arcWallet) balances.arc = await getBalance(arcWallet.id);
     if (ethWallet) balances.eth = await getBalance(ethWallet.id);
     if (solWallet) balances.sol = await getBalance(solWallet.id);
-    
+
     const arcBalNum = parseFloat(balances.arc);
     const ethBalNum = parseFloat(balances.eth);
     const solBalNum = parseFloat(balances.sol);
-    
+
     let recommendation: any = undefined;
-    if (arcBalNum < 0.05) { // Threshold for bridging
+    if (arcBalNum < 0.05) {
+      // Threshold for bridging
       if (ethBalNum > solBalNum && ethBalNum > 0.1) {
-        recommendation = { fromChain: "Ethereum_Sepolia", toChain: "Arc_Testnet", amount: "1.0" };
+        recommendation = {
+          fromChain: "Ethereum_Sepolia",
+          toChain: "Arc_Testnet",
+          amount: "1.0",
+        };
       } else if (solBalNum > 0.1) {
-        recommendation = { fromChain: "Solana_Devnet", toChain: "Arc_Testnet", amount: "1.0" };
+        recommendation = {
+          fromChain: "Solana_Devnet",
+          toChain: "Arc_Testnet",
+          amount: "1.0",
+        };
       }
     }
-    
+
     return {
       hasArcBalance: arcBalNum > 0,
       hasEthereumBalance: ethBalNum > 0,
@@ -171,7 +204,7 @@ export async function checkCrossChainBalance(walletAddress: string, getCircleCli
       ethereumBalance: balances.eth,
       solanaBalance: balances.sol,
       suggestBridge: !!recommendation,
-      bridgeRecommendation: recommendation
+      bridgeRecommendation: recommendation,
     };
   } catch (error) {
     functions.logger.error("Error checking cross-chain balances:", error);
@@ -182,7 +215,7 @@ export async function checkCrossChainBalance(walletAddress: string, getCircleCli
       arcBalance: "0",
       ethereumBalance: "0",
       solanaBalance: "0",
-      suggestBridge: false
+      suggestBridge: false,
     };
   }
 }
