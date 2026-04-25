@@ -1,0 +1,23 @@
+/* Reset and global defaults for AudiBit Professional Extension */
+:root {
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  width: 420px;
+  height: 600px;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+}

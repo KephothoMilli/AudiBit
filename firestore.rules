@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper to check if a user is writing their own record
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Agents: Anyone can read, only self can write
+    match /agents/{agentId} {
+      allow read: if true;
+      allow write: if true; // In prod: if isOwner(agentId);
+    }
+
+    // Offers: Anyone can read, only the provider can write
+    match /offers/{offerId} {
+      allow read: if true;
+      allow write: if true; // In prod: if request.resource.data.providerId == request.auth.uid;
+    }
+
+    // Requests: Anyone can read, only the consumer can write
+    match /requests/{requestId} {
+      allow read: if true;
+      allow create: if true; 
+      allow update: if true; // Mostly for provider status updates, should be restricted
+    }
+
+    // Usage Proofs: Read-all, Write-only by provider or system
+    match /usage_proofs/{proofId} {
+      allow read: if true;
+      allow create: if true;
+    }
+
+    // Payments & Settlements: Immutable for users, system-only write
+    match /payments/{paymentId} {
+      allow read: if true;
+      allow write: if false; 
+    }
+    
+    match /settlements/{settlementId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Datasets: Anyone can read, owner can write
+    match /datasets/{datasetId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    // Aggregates: System only
+    match /aggregates/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
