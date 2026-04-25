@@ -13,6 +13,7 @@
  */
 
 import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 import {
   GoogleGenerativeAI,
@@ -303,12 +304,7 @@ function annotateScreenshot(
 /**
  * Main Wand Agent Endpoint
  */
-export const wandAgent = functions
-  .runWith({
-    timeoutSeconds: 120, // 2 minutes for voice processing
-    memory: "1GB",
-  })
-  .https.onRequest(async (req, res) => {
+export const wandAgent = onRequest({ timeoutSeconds: 120, memory: "1GiB", cors: true }, async (req, res) => {
     // Enable CORS
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -374,12 +370,7 @@ export const wandAgent = functions
 /**
  * Wand Voice Stream Endpoint (for real-time voice interaction)
  */
-export const wandVoiceStream = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes for streaming
-    memory: "1GB",
-  })
-  .https.onRequest(async (req, res) => {
+export const wandVoiceStream = onRequest({ timeoutSeconds: 300, memory: "1GiB", cors: true }, async (req, res) => {
     // Enable CORS
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -424,12 +415,7 @@ export const wandVoiceStream = functions
 /**
  * Wand Context Analyzer - Analyzes page for voice-actionable elements
  */
-export const wandAnalyzeContext = functions
-  .runWith({
-    timeoutSeconds: 60,
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const wandAnalyzeContext = onRequest({ timeoutSeconds: 60, memory: "512MiB", cors: true }, async (req, res) => {
     // Enable CORS
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -490,3 +476,6 @@ Respond in JSON format.`;
       });
     }
   });
+
+
+

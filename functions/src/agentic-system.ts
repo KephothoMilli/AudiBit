@@ -12,6 +12,7 @@
  */
 
 import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 import {
   GoogleGenerativeAI,
@@ -852,12 +853,7 @@ const corsHeaders = {
  * This is the main entry point for the agentic system.
  * The coordinator agent will determine which specialized agents to invoke.
  */
-export const agenticAudit = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "1GB",
-  })
-  .https.onRequest(async (req, res) => {
+export const agenticAudit = onRequest({ timeoutSeconds: 300, memory: "1GiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
 
     if (req.method === "OPTIONS") {
@@ -927,12 +923,7 @@ export const agenticAudit = functions
 /**
  * POST /agentic/ui - Direct UI Agent Endpoint (bypass coordinator)
  */
-export const agenticUI = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const agenticUI = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
 
     if (req.method === "OPTIONS") {
@@ -957,12 +948,7 @@ export const agenticUI = functions
 /**
  * POST /agentic/ux - Direct UX Agent Endpoint (bypass coordinator)
  */
-export const agenticUX = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const agenticUX = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
 
     if (req.method === "OPTIONS") {
@@ -987,12 +973,7 @@ export const agenticUX = functions
 /**
  * POST /agentic/dom - Direct DOM Agent Endpoint (bypass coordinator)
  */
-export const agenticDOM = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const agenticDOM = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
 
     if (req.method === "OPTIONS") {
@@ -1017,12 +998,7 @@ export const agenticDOM = functions
 /**
  * POST /agentic/security - Direct Security Agent Endpoint (bypass coordinator)
  */
-export const agenticSecurity = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const agenticSecurity = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
 
     if (req.method === "OPTIONS") {
@@ -1049,3 +1025,6 @@ export const agenticSecurity = functions
       });
     }
   });
+
+
+

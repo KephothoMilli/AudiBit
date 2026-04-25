@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 import {
   GoogleGenerativeAI,
@@ -285,12 +286,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, X-Wallet-Address",
 };
 
-export const auditUI = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const auditUI = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
     if (req.method === "OPTIONS") {
       res.status(204).send("");
@@ -308,12 +304,7 @@ export const auditUI = functions
     res.json(result);
   });
 
-export const auditUX = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const auditUX = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
     if (req.method === "OPTIONS") {
       res.status(204).send("");
@@ -331,12 +322,7 @@ export const auditUX = functions
     res.json(result);
   });
 
-export const auditDOM = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const auditDOM = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
     if (req.method === "OPTIONS") {
       res.status(204).send("");
@@ -354,12 +340,7 @@ export const auditDOM = functions
     res.json(result);
   });
 
-export const auditSecurity = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "512MB",
-  })
-  .https.onRequest(async (req, res) => {
+export const auditSecurity = onRequest({ timeoutSeconds: 300, memory: "512MiB", cors: true }, async (req, res) => {
     res.set(corsHeaders);
     if (req.method === "OPTIONS") {
       res.status(204).send("");
@@ -381,3 +362,6 @@ export const auditSecurity = functions
     );
     res.json(result);
   });
+
+
+

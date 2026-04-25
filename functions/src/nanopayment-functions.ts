@@ -5,6 +5,7 @@
  */
 
 import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import {
   getPaymentQuote,
   AGENT_PRICES,
@@ -22,9 +23,7 @@ const cors = {
  * Returns price, balance, canProceed, needsBridge for the popup to display
  * before the user clicks an agent card.
  */
-export const getAgentQuote = functions
-  .runWith({ timeoutSeconds: 30, memory: "256MB" })
-  .https.onRequest(async (req, res) => {
+export const getAgentQuote = onRequest({ timeoutSeconds: 30, memory: "256MiB", cors: true }, async (req, res) => {
     res.set(cors);
     if (req.method === "OPTIONS") {
       res.status(204).send("");
@@ -37,11 +36,9 @@ export const getAgentQuote = functions
         (req.query.agent as string) || (req.body?.agent as string);
 
       if (!walletAddress || !agentType) {
-        res
-          .status(400)
-          .json({
-            error: "X-Wallet-Address header and agent query param required",
-          });
+        res.status(400).json({
+          error: "X-Wallet-Address header and agent query param required",
+        });
         return;
       }
 
@@ -62,9 +59,7 @@ export const getAgentQuote = functions
  * GET /getAgentPrices
  * Returns the price list for all agents — used by the popup to render prices.
  */
-export const getAgentPrices = functions
-  .runWith({ timeoutSeconds: 10, memory: "128MB" })
-  .https.onRequest(async (req, res) => {
+export const getAgentPrices = onRequest({ timeoutSeconds: 10, memory: "128MiB", cors: true }, async (req, res) => {
     res.set(cors);
     if (req.method === "OPTIONS") {
       res.status(204).send("");
@@ -78,3 +73,6 @@ export const getAgentPrices = functions
       chain: "Arc Testnet",
     });
   });
+
+
+

@@ -9,6 +9,7 @@
  */
 
 import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 import {
   GoogleGenerativeAI,
@@ -790,12 +791,7 @@ export const securityAgent = functions.https.onRequest(async (req, res) => {
 /**
  * POST /agents/full - Run all agents (full audit)
  */
-export const fullAudit = functions
-  .runWith({
-    timeoutSeconds: 300, // 5 minutes
-    memory: "1GB",
-  })
-  .https.onRequest(async (req, res) => {
+export const fullAudit = onRequest({ timeoutSeconds: 300, memory: "1GiB", cors: true }, async (req, res) => {
     // Enable CORS
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -937,3 +933,6 @@ export const fullAudit = functions
       });
     }
   });
+
+
+
