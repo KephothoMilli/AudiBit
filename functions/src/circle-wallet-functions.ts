@@ -1294,7 +1294,7 @@ export const getPaymentLogs = functions.https.onRequest(async (req, res) => {
         .collection("payment_logs")
         .where("walletAddress", "==", walletAddress)
         .orderBy("createdAt", "desc")
-        .limit(20)
+        .limit(50)
         .get();
 
       result = logs.docs.map((doc) => ({
@@ -1312,7 +1312,7 @@ export const getPaymentLogs = functions.https.onRequest(async (req, res) => {
           .firestore()
           .collection("payment_logs")
           .where("walletAddress", "==", walletAddress)
-          .limit(20)
+          .limit(50)
           .get();
 
         result = logs.docs
