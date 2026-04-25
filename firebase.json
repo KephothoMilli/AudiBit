@@ -3,10 +3,20 @@
         "rules": "firestore.rules",
         "indexes": "firestore.indexes.json"
     },
-    "functions": {
-        "source": "functions",
-        "runtime": "nodejs22"
-    },
+    "functions": [
+        {
+            "source": "functions",
+            "codebase": "default",
+            "runtime": "nodejs22",
+            "ignore": [
+                "node_modules",
+                ".git",
+                "firebase-debug.log",
+                "firebase-debug.*.log",
+                "*.local"
+            ]
+        }
+    ],
     "hosting": {
         "public": "landing",
         "ignore": [
@@ -14,7 +24,90 @@
             "**/.*",
             "**/node_modules/**"
         ],
+        "headers": [
+            {
+                "source": "**/*.@(js|css|html)",
+                "headers": [
+                    {
+                        "key": "Cache-Control",
+                        "value": "public, max-age=3600"
+                    }
+                ]
+            }
+        ],
         "rewrites": [
+            {
+                "source": "/api/createWallet",
+                "function": "createWallet"
+            },
+            {
+                "source": "/api/getWalletBalance",
+                "function": "getWalletBalance"
+            },
+            {
+                "source": "/api/sendUSDC",
+                "function": "sendUSDC"
+            },
+            {
+                "source": "/api/auditUI",
+                "function": "auditUI"
+            },
+            {
+                "source": "/api/auditUX",
+                "function": "auditUX"
+            },
+            {
+                "source": "/api/auditDOM",
+                "function": "auditDOM"
+            },
+            {
+                "source": "/api/auditSecurity",
+                "function": "auditSecurity"
+            },
+            {
+                "source": "/api/agenticAudit",
+                "function": "agenticAudit"
+            },
+            {
+                "source": "/api/wandAgent",
+                "function": "wandAgent"
+            },
+            {
+                "source": "/api/getAgentQuote",
+                "function": "getAgentQuote"
+            },
+            {
+                "source": "/api/getAgentPrices",
+                "function": "getAgentPrices"
+            },
+            {
+                "source": "/api/getPaymentLogs",
+                "function": "getPaymentLogs"
+            },
+            {
+                "source": "/api/bridgeFromEthereum",
+                "function": "bridgeFromEthereum"
+            },
+            {
+                "source": "/api/bridgeFromSolana",
+                "function": "bridgeFromSolana"
+            },
+            {
+                "source": "/api/importWallet",
+                "function": "importWallet"
+            },
+            {
+                "source": "/api/verifyWallet",
+                "function": "verifyWallet"
+            },
+            {
+                "source": "/api/listCircleWallets",
+                "function": "listCircleWallets"
+            },
+            {
+                "source": "/api/**",
+                "function": "api"
+            },
             {
                 "source": "**",
                 "destination": "/index.html"
