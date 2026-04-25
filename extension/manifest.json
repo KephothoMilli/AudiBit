@@ -17,8 +17,14 @@
     "https://*.cloudfunctions.net/*",
     "https://*.run.app/*"
   ],
+  "icons": {
+    "128": "icon-128.png"
+  },
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_icon": {
+      "128": "icon-128.png"
+    }
   },
   "background": {
     "service_worker": "src/background/service-worker.ts",
